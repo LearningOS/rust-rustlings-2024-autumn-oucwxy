@@ -6,6 +6,7 @@
 // hint.
 
 // I AM NOT DONE
+// test
 
 struct ColorClassicStruct {
     // TODO: Something goes here
