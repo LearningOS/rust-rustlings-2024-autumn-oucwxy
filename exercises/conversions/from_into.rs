@@ -24,9 +24,9 @@ impl Default for Person {
     }
 }
 
-// Your task is to complete this implementation in order for the line `let p =
-// Person::from("Mark,20")` to compile Please note that you'll need to parse the
-// age component into a `usize` with something like `"4".parse::<usize>()`. The
+// Your task is to complete this implementation in order for the line let p =
+// Person::from("Mark,20") to compile Please note that you'll need to parse the
+// age component into a usize with something like "4".parse::<usize>(). The
 // outcome of this needs to be handled appropriately.
 //
 // Steps:
@@ -36,19 +36,49 @@ impl Default for Person {
 // 3. Extract the first element from the split operation and use it as the name.
 // 4. If the name is empty, then return the default of Person.
 // 5. Extract the other element from the split operation and parse it into a
-//    `usize` as the age.
+//    usize as the age.
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
+
+
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.is_empty() {
+            return Person::default();
+        }
+
+        let parts: Vec<&str> = s.split(',').collect();
+        let name = parts.get(0).unwrap_or(&"").to_string();
+
+        // 如果名字为空，返回默认值
+        if name.is_empty() {
+            return Person::default();
+        }
+
+        // 处理年龄部分
+        let age = if let Some(&age_str) = parts.get(1) {
+            age_str.parse::<usize>().unwrap_or(0)
+        } else {
+            return Person::default(); // 如果没有年龄部分，返回默认值
+        };
+
+        // 如果年龄无效或有额外部分，返回默认值
+        if age == 0 && parts.len() > 1 {
+            return Person::default();
+        }
+
+        if parts.len() > 2 || (parts.len() == 2 && parts[1].trim().is_empty()) {
+            return Person::default();
+        }
+
+        Person { name, age }
     }
 }
 
 fn main() {
-    // Use the `from` function
+    // Use the from function
     let p1 = Person::from("Mark,20");
     // Since From is implemented for Person, we should be able to use Into
     let p2: Person = "Gerald,70".into();
